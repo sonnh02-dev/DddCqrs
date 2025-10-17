@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "gjB0tJA/Bz4=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\admin\\OneDrive\\Desktop\\DDD_CQRS\\src\\DDD_CQRS.Domain\\DDD_CQRS.Domain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\admin\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

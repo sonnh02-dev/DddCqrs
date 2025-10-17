@@ -1,0 +1,30 @@
+﻿using DDD_CQRS.Domain.Users;
+using DDD_CQRS.Infrastructure.Data.DbContexts;
+using Microsoft.EntityFrameworkCore;
+
+namespace DDD_CQRS.Infrastructure.Repositories;
+
+internal sealed class UserRepository : IUserRepository
+{
+    private readonly ApplicationWriteDbContext _dbContext;
+
+    public UserRepository(ApplicationWriteDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+    }
+
+    public async Task<bool> IsEmailUniqueAsync(Email email)
+    {
+        return !await _dbContext.Users.AnyAsync(u => u.Email == email);
+    }
+
+    public void Insert(User user)
+    {
+        _dbContext.Users.Add(user);
+    }
+}

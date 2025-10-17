@@ -1,0 +1,29 @@
+﻿using DDD_CQRS.Domain.Followers;
+using DDD_CQRS.Domain.Users;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace DDD_CQRS.Infrastructure.Data.Configurations.Write;
+
+internal sealed class FollowerConfiguration : IEntityTypeConfiguration<Follower>
+{
+    public void Configure(EntityTypeBuilder<Follower> builder)
+    {
+        builder.HasKey(f => new { f.UserId, f.FollowedId });
+
+
+        builder.HasIndex(f => new { f.FollowedId, f.UserId });
+
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(f => f.FollowedId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Ignore(f => f.Id);
+    }
+}
