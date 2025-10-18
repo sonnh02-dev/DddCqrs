@@ -16,9 +16,9 @@ public sealed class Follower : Entity
     {
     }
 
-    public Guid UserId { get; private set; }
+    public Guid UserId { get; private set; }// the user who is following
 
-    public Guid FollowedId { get; private set; }
+    public Guid FollowedId { get; private set; }// the user being followed
 
     public DateTime CreatedOnUtc { get; private set; }
 

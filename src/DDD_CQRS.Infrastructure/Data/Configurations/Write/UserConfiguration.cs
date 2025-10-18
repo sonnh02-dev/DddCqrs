@@ -11,11 +11,22 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(u => u.Id);
 
         builder.ComplexProperty(
-            u => u.Email,
-            b => b.Property(e => e.Value).HasColumnName(nameof(User.Email)));
+           u => u.Email,
+           b =>
+           {
+               b.Property(e => e.Value)
+                .HasColumnName(nameof(User.Email))
+                .HasMaxLength(255)
+                .IsRequired();
+           });
+
 
         builder.ComplexProperty(
             u => u.Name,
-            b => b.Property(e => e.Value).HasColumnName(nameof(User.Name)));
+            b => b.Property(e => e.Value)
+                  .HasColumnName(nameof(User.Name))
+                  .HasMaxLength(255)
+                  .IsRequired()
+                );
     }
 }

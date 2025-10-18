@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DDD_CQRS.SharedKernel")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+233a6b412395770cbecdfc5dc67edaf022bf105b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+66ccf2039fe722a481934780320c9692f64c3a52")]
 [assembly: System.Reflection.AssemblyProductAttribute("DDD_CQRS.SharedKernel")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DDD_CQRS.SharedKernel")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
