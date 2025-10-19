@@ -6,6 +6,7 @@ public interface IFollowerRepository
         Guid userId,
         Guid followedId,
         CancellationToken cancellationToken = default);
+    Task<object?> GetStatsByUserIdAsync(Guid userId, CancellationToken cancellationToken);
 
     void Insert(Follower follower);
 }

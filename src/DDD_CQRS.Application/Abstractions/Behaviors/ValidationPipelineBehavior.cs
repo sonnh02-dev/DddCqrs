@@ -4,16 +4,14 @@ using DDD_CQRS.SharedKernel;
 
 namespace DDD_CQRS.Application.Abstractions.Behaviors;
 
-
-
-public class ValidationBehavior<TRequest, TResponse>
+public class ValidationPipelineBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : Result
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-    public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
+    public ValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators)
     {
         _validators = validators;
     }

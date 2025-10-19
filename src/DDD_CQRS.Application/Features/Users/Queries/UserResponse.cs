@@ -1,4 +1,4 @@
-﻿namespace DDD_CQRS.Application.Users.GetByEmail;
+﻿namespace DDD_CQRS.Application.Features.Users.Queries;
 
 public sealed record UserResponse
 {
@@ -9,4 +9,5 @@ public sealed record UserResponse
     public string Name { get; init; }
 
     public bool HasPublicProfile { get; init; }
+
 }

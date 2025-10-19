@@ -1,6 +1,6 @@
 ﻿using DDD_CQRS.Application.Abstractions.Caching;
 
-namespace DDD_CQRS.Application.Users.GetByEmail;
+namespace DDD_CQRS.Application.Features.Users.Queries.GetByEmail;
 
 public sealed record GetUserByEmailQuery(string Email) : ICachedQuery<UserResponse>
 {

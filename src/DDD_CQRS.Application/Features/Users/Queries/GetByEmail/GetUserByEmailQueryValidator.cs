@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace DDD_CQRS.Application.Users.GetByEmail;
+namespace DDD_CQRS.Application.Features.Users.Queries.GetByEmail;
 
 public sealed class GetUserByEmailQueryValidator : AbstractValidator<GetUserByEmailQuery>
 {

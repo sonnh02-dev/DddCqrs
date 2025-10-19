@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Dapper;
 using DDD_CQRS.Application.Abstractions.Messaging;
-using DDD_CQRS.Application.Users.GetByEmail;
 using DDD_CQRS.Domain.Users;
 using DDD_CQRS.SharedKernel;
 using System.Data;
 
-namespace DDD_CQRS.Infrastructure.Queries.Users;
+namespace DDD_CQRS.Application.Features.Users.Queries.GetByEmail;
 
 internal sealed class GetUserByEmailQueryHandler : IQueryHandler<GetUserByEmailQuery, UserResponse>
 {

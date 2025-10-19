@@ -1,22 +1,23 @@
 ﻿using Dapper;
-using DDD_CQRS.Application.Users.GetByEmail;
-using DDD_CQRS.Application.Users.GetById;
+using DDD_CQRS.Application.Features.Users.Queries;
+using DDD_CQRS.Application.Features.Users.Queries.GetById;
 using DDD_CQRS.Domain.Users;
 using DDD_CQRS.Infrastructure.Data;
 using DDD_CQRS.Infrastructure.Data.DbContexts;
+using MassTransit;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace DDD_CQRS.Infrastructure.Repositories;
 
 internal sealed class UserRepository : IUserRepository
 {
     private readonly ApplicationWriteDbContext _dbContext;
-    private readonly DbConnectionFactory _dbConnectionFactory;
-    public UserRepository(ApplicationWriteDbContext dbContext, DbConnectionFactory dbConnectionFactory)
+    public UserRepository(ApplicationWriteDbContext dbContext)
     {
         _dbContext = dbContext;
-        _dbConnectionFactory = dbConnectionFactory;
     }
 
     public async Task<User?> GetByEmailAsync(Email email, CancellationToken cancellationToken)
@@ -24,29 +25,39 @@ internal sealed class UserRepository : IUserRepository
         return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
     }
 
-    public async Task<object?> GetDetailByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<T?> GetByIdAsync<T>(Guid id, CancellationToken cancellationToken)
+           where T : class
     {
-        using IDbConnection connection = _dbConnectionFactory.CreateOpenConnection();
+        FormattableString query;
 
-        const string sql =
-            """
-            SELECT 
-                u.Id, 
-                u.Email, 
-                u.Name, 
-                u.HasPublicProfile,
-                COUNT(f.UserId) AS NumberOfFollowers
-            FROM Users u
-            LEFT JOIN Followers f ON f.FollowedId = u.Id
-            WHERE u.Id = @Id
-            GROUP BY u.Id, u.Email, u.Name, u.HasPublicProfile;
-            
-            """;
+        if (typeof(T) == typeof(User))
+        {
+            query = $"SELECT * FROM Users WHERE Id = {id}";
+        }
+        else if (typeof(T) == typeof(UserResponse))
+        {
+            query = $"""
+                SELECT 
+                  Id, 
+                  Email, 
+                  Name, 
+                  HasPublicProfile
+                FROM Users 
+                WHERE Id = {id}
+               """;
+        }
+        else
+        {
+            throw new NotSupportedException($"Type {typeof(T).Name} is not supported");
+        }
 
-        return await connection.QueryFirstOrDefaultAsync<UserDetailResponse>(
-            sql,
-            new { Id = id });
+        return await _dbContext.Database
+            .SqlQuery<T>(query)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
+
     }
+
 
     public async Task<bool> IsEmailUniqueAsync(Email email)
     {

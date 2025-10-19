@@ -1,20 +1,20 @@
-﻿using System.Reflection;
+﻿using DDD_CQRS.Application.Abstractions.Caching;
 using DDD_CQRS.Application.Abstractions.Data;
 using DDD_CQRS.Application.Abstractions.Notifications;
-using DDD_CQRS.Application.Users.Create;
 using DDD_CQRS.Domain.Followers;
 using DDD_CQRS.Domain.Users;
+using DDD_CQRS.Infrastructure.Caching;
 using DDD_CQRS.Infrastructure.Data;
+using DDD_CQRS.Infrastructure.Data.DbContexts;
 using DDD_CQRS.Infrastructure.Notifications;
-
 using DDD_CQRS.Infrastructure.Repositories;
+using DDD_CQRS.SharedKernel;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using DDD_CQRS.SharedKernel;
-using DDD_CQRS.Infrastructure.Data.DbContexts;
+using System.Reflection;
 
 namespace DDD_CQRS.Infrastructure;
 
@@ -33,6 +33,11 @@ public static class DependencyInjection
         Ensure.NotNullOrEmpty(connectionString);
 
         services.AddTransient(_ => new DbConnectionFactory(connectionString));
+        services.AddDbContext<ApplicationWriteDbContext>(
+          (sp, options) => options
+        .UseSqlServer(connectionString));
+
+
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationWriteDbContext>());
 
@@ -43,8 +48,9 @@ public static class DependencyInjection
 
         services.AddMemoryCache();
 
+        services.AddSingleton<ICacheService, CacheService>();
 
-        
+
 
     }
 }

@@ -3,7 +3,7 @@ using DDD_CQRS.Application.Abstractions.Messaging;
 using DDD_CQRS.Domain.Users;
 using DDD_CQRS.SharedKernel;
 
-namespace DDD_CQRS.Application.Users.Create;
+namespace DDD_CQRS.Application.Features.Users.Commands.Create;
 
 internal sealed class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Guid>
 {

@@ -1,9 +1,13 @@
 ﻿
-using DDD_CQRS.Application.Users.Create;
-
-using MediatR;
-using DDD_CQRS.SharedKernel;
+using DDD_CQRS.Application.Features.Followers.GetFollowerStats;
+using DDD_CQRS.Application.Features.Followers.StartFollowing;
+using DDD_CQRS.Application.Features.Users.Commands.Create;
+using DDD_CQRS.Application.Features.Users.Queries;
+using DDD_CQRS.Application.Features.Users.Queries.GetByEmail;
+using DDD_CQRS.Application.Features.Users.Queries.GetById;
 using DDD_CQRS.Presentation.Extensions;
+using DDD_CQRS.SharedKernel;
+using MediatR;
 
 namespace DDD_CQRS.Presentation.Endpoints;
 
@@ -18,6 +22,39 @@ internal static class UserEndpoints
             return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
         });
 
-       
+        app.MapPost("api/users/{userId}/follow/{followedId}",
+            async (Guid userId, Guid followedId, ISender sender) =>
+            {
+                Result result = await sender.Send(new StartFollowingCommand(userId, followedId));
+
+                return result.IsSuccess ? Results.NoContent() : result.ToProblemDetails();
+            });
+
+        app.MapGet("api/users/{userId}", async (Guid userId, ISender sender) =>
+        {
+            var query = new GetUserByIdQuery(userId);
+
+            Result<UserResponse> result = await sender.Send(query);
+
+            return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
+        });
+
+        app.MapGet("api/users/by-email/{email}", async (string email, ISender sender) =>
+        {
+            var query = new GetUserByEmailQuery(email);
+
+            Result<UserResponse> result = await sender.Send(query);
+
+            return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
+        });
+
+        app.MapGet("api/users/{userId}/follower-stats", async (Guid userId, ISender sender) =>
+        {
+            var query = new GetFollowerStatsQuery(userId);
+
+            Result<FollowerStatsResponse> result = await sender.Send(query);
+
+            return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
+        });
     }
 }

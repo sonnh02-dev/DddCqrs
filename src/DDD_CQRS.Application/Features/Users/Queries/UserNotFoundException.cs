@@ -1,4 +1,4 @@
-﻿namespace DDD_CQRS.Application.Users;
+﻿namespace DDD_CQRS.Application.Features.Users.Queries;
 
 public sealed class UserNotFoundException : Exception
 {

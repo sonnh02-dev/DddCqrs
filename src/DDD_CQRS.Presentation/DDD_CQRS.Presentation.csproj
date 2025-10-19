@@ -29,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DDD_CQRS.Application\DDD_CQRS.Application.csproj" />
     <ProjectReference Include="..\DDD_CQRS.Infrastructure\DDD_CQRS.Infrastructure.csproj" />
+    <ProjectReference Include="..\DDD_CQRS.SharedKernel\DDD_CQRS.SharedKernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
