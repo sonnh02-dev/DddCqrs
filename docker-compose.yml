@@ -1,0 +1,57 @@
+﻿version: "3.8"
+
+services:
+  dddcqrs.presentation:
+    container_name: dddcqrs.presentation
+    build:
+      context: .
+      dockerfile: src/DddCqrs.Presentation/Dockerfile
+    ports:
+      - "5000:8080"
+      - "5001:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+       dddcqrs.db:
+         condition: service_healthy
+       dddcqrs.seq:
+         condition: service_started
+    networks:
+      - app-network
+
+  dddcqrs.db:
+    container_name: dddcqrs.db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - SA_PASSWORD=Strong_password_123!
+      - ACCEPT_EULA=Y
+    ports:
+      - "1435:1433"  # tránh conflict SQL server host
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "Strong_password_123!", "-Q", "SELECT 1", "-C"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  dddcqrs.seq:
+    container_name: dddcqrs.seq
+    image: datalust/seq:latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_ADMINPASSWORD=Strong_seq_password_123!
+    ports:
+      - "5341:5341"
+      - "8082:80"
+    networks:
+      - app-network
+
+volumes:
+  sqlserver_data:
+
+networks:
+  app-network:
+    driver: bridge
