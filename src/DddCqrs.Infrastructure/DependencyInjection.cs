@@ -9,7 +9,7 @@ using DddCqrs.Infrastructure.Data.DbContexts;
 using DddCqrs.Infrastructure.Notifications;
 using DddCqrs.Infrastructure.Repositories;
 using DddCqrs.SharedKernel;
-using MassTransit;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,13 +29,28 @@ public static class DependencyInjection
         services.AddMediatR(config =>
             config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
-        string? connectionString = configuration.GetConnectionString("MyDatabase");
-        Ensure.NotNullOrEmpty(connectionString);
+        string? mainConnectString = configuration.GetConnectionString("MyDatabase");
+        var defaultConnectString = configuration.GetConnectionString("Default");
+        Ensure.NotNullOrEmpty(mainConnectString);
+        try
+        {
+            using var conn = new SqlConnection(mainConnectString);
+            conn.Open();
+        }
+        catch
+        {
+            mainConnectString = defaultConnectString;
+        }
+        services.AddTransient(_ => new DbConnectionFactory(mainConnectString));
 
-        services.AddTransient(_ => new DbConnectionFactory(connectionString));
-        services.AddDbContext<ApplicationWriteDbContext>(
-          (sp, options) => options
-        .UseSqlServer(connectionString));
+        services.AddDbContext<ApplicationWriteDbContext>((sp, options) =>
+        {
+            options.UseSqlServer(
+                mainConnectString,
+                sqlOptions => sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null)
+            );
+        });
+
 
 
 

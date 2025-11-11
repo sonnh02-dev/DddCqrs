@@ -9,6 +9,8 @@ public sealed record Email //Value-based equality
 
     public string Value { get; }
 
+  
+
     public static Result<Email> Create(string? email)
     {
         if (string.IsNullOrWhiteSpace(email))

@@ -4,7 +4,6 @@ using DddCqrs.Application.Features.Users.Queries.GetById;
 using DddCqrs.Domain.Users;
 using DddCqrs.Infrastructure.Data;
 using DddCqrs.Infrastructure.Data.DbContexts;
-using MassTransit;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;

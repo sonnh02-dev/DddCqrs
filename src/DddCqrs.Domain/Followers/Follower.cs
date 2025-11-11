@@ -5,7 +5,7 @@ namespace DddCqrs.Domain.Followers;
 
 public sealed class Follower : Entity
 {
-    public Follower(Guid userId, Guid followedId, DateTime createdOnUtc)
+    private Follower(Guid userId, Guid followedId, DateTime createdOnUtc)
     {
         UserId = userId;
         FollowedId = followedId;

@@ -1,9 +1,12 @@
 ﻿using DddCqrs.Application;
 using DddCqrs.Infrastructure;
-using Serilog;
+using DddCqrs.Infrastructure.Data;
+using DddCqrs.Infrastructure.Data.DbContexts;
 using DddCqrs.Presentation.Endpoints;
 using DddCqrs.Presentation.Extensions;
 using DddCqrs.Presentation.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -22,13 +25,23 @@ builder.Services.AddProblemDetails();
 
 WebApplication app = builder.Build();
 
+app.ApplyMigrations();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+    c.RoutePrefix = "swagger"; 
+});
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationWriteDbContext>();
+    await DbSeeder.SeedAsync(context, services, CancellationToken.None);
 
-    app.ApplyMigrations();
 }
+
+
 
 app.UseHttpsRedirection();
 
