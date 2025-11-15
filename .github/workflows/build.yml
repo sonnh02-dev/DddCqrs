@@ -85,5 +85,6 @@ jobs:
           containerAppName: ${{ env.CONTAINER_APP_NAME }}
           environmentVariables: |
             ASPNETCORE_ENVIRONMENT=Production
-            ConnectionStrings__MyDatabase=${{ secrets.DB_CONNECTION_STRING }}
+            ConnectionStrings__MyDatabase=secretref:db-conn
+
 
