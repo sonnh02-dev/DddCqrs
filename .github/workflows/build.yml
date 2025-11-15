@@ -83,8 +83,6 @@ jobs:
           imageToDeploy: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           containerAppName: ${{ env.CONTAINER_APP_NAME }}
-          environmentVariables: |
-            ASPNETCORE_ENVIRONMENT=Production
-            ConnectionStrings__MyDatabase=secretref:db-conn
+        
 
 
