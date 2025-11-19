@@ -1,15 +1,15 @@
-﻿version: "3.8"
-
+﻿
 services:
   dddcqrs.presentation:
-    image: ${DOCKER_REGISTRY}dddcqrs.presentation:latest
+    image: sonnh02dev/dddcqrs.presentation:dev
     container_name: dddcqrs.presentation
     build:
       context: .
       dockerfile: src/DddCqrs.Presentation/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
     ports:
       - "5000:8080"
-      - "5001:8081"
     depends_on:
       dddcqrs.db:
         condition: service_healthy

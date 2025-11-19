@@ -9,8 +9,8 @@ on:
 env:
   DOTNET_VERSION: "8.0.x"
   IMAGE_NAME: dddcqrs.presentation
-  CONTAINER_APP_NAME: ddd-cqrs
-  RESOURCE_GROUP: Demo
+  CONTAINER_APP_NAME: ddd-cqrs-aca
+  RESOURCE_GROUP: DddCqrs
   AZURE_CONTAINER_REGISTRY: dddcqrsacr
 
 jobs:

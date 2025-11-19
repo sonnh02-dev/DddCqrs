@@ -13,6 +13,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 
@@ -22,31 +23,25 @@ public static class DependencyInjection
 {
     public static void AddInfrastructure(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration
+        )
     {
+
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
         services.AddMediatR(config =>
             config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
-        string? mainConnectString = configuration.GetConnectionString("MyDatabase");
-        var defaultConnectString = configuration.GetConnectionString("Default");
-        Ensure.NotNullOrEmpty(mainConnectString);
-        try
-        {
-            using var conn = new SqlConnection(mainConnectString);
-            conn.Open();
-        }
-        catch
-        {
-            mainConnectString = defaultConnectString;
-        }
-        services.AddTransient(_ => new DbConnectionFactory(mainConnectString));
+        string? connectString = configuration.GetConnectionString("MyDatabase");
+        Ensure.NotNullOrEmpty(connectString);
+
+
+        services.AddSingleton(_ => new DbConnectionFactory(connectString));
 
         services.AddDbContext<ApplicationWriteDbContext>((sp, options) =>
         {
             options.UseSqlServer(
-                mainConnectString,
+                connectString,
                 sqlOptions => sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null)
             );
         });

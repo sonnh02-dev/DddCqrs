@@ -8,7 +8,6 @@
 		<DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
 		<DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
 		<DockerServiceName>dddcqrs.presentation</DockerServiceName>
-		<DockerImageTag>latest</DockerImageTag>
 
 	</PropertyGroup>
 	<ItemGroup>
